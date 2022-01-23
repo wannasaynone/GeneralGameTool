@@ -2,9 +2,11 @@
 
 
 function urlParse() {
-    var sheetID = "1cHdRzJ580gURjZn8dbHAC6M9gsioNN1ByYLj--LrMkw";
-    var key = "AIzaSyBB9AHDiWJ45QMvecaETzJM0w6IX9DgdBU"
-    var col = "BossData"
+
+    let urlParams = new URL(window.location.href).searchParams
+    var sheetID = urlParams.get("id");
+    var key = urlParams.get("key");
+    var col = urlParams.get("page");
     var url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/${col}?alt=json&key=${key}`
 
     return url;
@@ -29,14 +31,15 @@ function dataIntegration(sheetData) {
     let jsonKeyRow = data[0];
     let temJson = [];
 
-    for (let i = 0; i < jsonKeyRow.length; i++) { //從 key 開始
+    for (let i = 0; i < jsonKeyRow.length; i++) {//從 key 開始
+        // console.log(jsonKeyRow[i])
         if (jsonKeyRow[i].indexOf("NOEX") > -1) {
-            return;
+            continue;
         } else {
             // if (i == 3) { debugger }
             // [{ id }, { id }]
             for (let x = 1; x < data.length; x++) {
-                if (data[x][i] == "") return;
+                if (data[x][i] == "") continue;
                 if (temJson[x - 1]) {
                     temJson[x - 1][jsonKeyRow[i]] = checkToNum(data[x][i]);
                 } else {
@@ -45,10 +48,11 @@ function dataIntegration(sheetData) {
                     temJson.push(tem)
                 }
             }
-            console.log("temJson= ", temJson)
-
         }
     }
+    console.log("temJson= ", JSON.stringify(temJson))
+
+    document.getElementById("jsonText").value = JSON.stringify(temJson)
     // console.log("json: ", temJson);
 }
 
