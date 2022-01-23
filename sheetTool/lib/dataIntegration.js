@@ -52,7 +52,7 @@ function dataIntegration(sheetData) {
     }
     console.log("temJson= ", JSON.stringify(temJson))
 
-    document.getElementById("jsonText").value = JSON.stringify(temJson)
+    document.getElementById("jsonText").innerHTML = JSON.stringify(temJson)
     // console.log("json: ", temJson);
 }
 
