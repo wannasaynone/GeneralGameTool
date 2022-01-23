@@ -17,8 +17,11 @@ function getData(url) {
         .then(function (response) {
             return response.json();
         }).then((json) => {
-            // console.log(json);
-            dataIntegration(json)
+            if (json.error) {
+                document.getElementById("jsonText").innerHTML = JSON.stringify(json)
+            } else {
+                dataIntegration(json)
+            }
         })
         .catch(function (error) {
             console.error(error);
@@ -27,7 +30,6 @@ function getData(url) {
 
 function dataIntegration(sheetData) {
     let data = sheetData.values
-    let jsonDataLength = data.length;
     let jsonKeyRow = data[0];
     let temJson = [];
 
@@ -36,8 +38,6 @@ function dataIntegration(sheetData) {
         if (jsonKeyRow[i].indexOf("NOEX") > -1) {
             continue;
         } else {
-            // if (i == 3) { debugger }
-            // [{ id }, { id }]
             for (let x = 1; x < data.length; x++) {
                 if (data[x][i] == "") continue;
                 if (temJson[x - 1]) {
@@ -50,10 +50,9 @@ function dataIntegration(sheetData) {
             }
         }
     }
-    console.log("temJson= ", JSON.stringify(temJson))
+    // console.log("temJson= ", JSON.stringify(temJson))
 
     document.getElementById("jsonText").innerHTML = JSON.stringify(temJson)
-    // console.log("json: ", temJson);
 }
 
 function checkToNum(val) {
